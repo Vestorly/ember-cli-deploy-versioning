@@ -221,6 +221,10 @@ module.exports = {
           return versioner.bind(this);
         }
 
+        if (versioner && typeof versioner === 'object') {
+          return versioner;
+        }
+
         const Versioner = require('./lib/versioners')[versioner];
 
         if (!Versioner) {
@@ -241,6 +245,10 @@ module.exports = {
 
         if (incrementer && typeof incrementer === 'function') {
           return { increment: incrementer.bind(this) };
+        }
+
+        if (incrementer && typeof incrementer === 'object') {
+          return incrementer;
         }
 
         const Incrementer = require('./lib/incrementers')[incrementer];
