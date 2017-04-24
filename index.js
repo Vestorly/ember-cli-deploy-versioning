@@ -17,37 +17,27 @@ module.exports = {
       name: options.name,
 
       defaultConfig: {
+        level: 'patch',
 
-        level: 'patch',           // the amount to increment the version by
+        versionFiles: ['package.json'],
 
-        versionFiles: ['package.json'], // Which files to apply versioning to.
-                                        // The first file in this list is where
-                                        // the previous version is read from.
+        bundle: false,
 
-        bundle: false,            // whether to create an archive .zip from
-                                  // HEAD of current branch.
+        gitAdd: ['package.json'],
 
-        gitAdd: ['package.json'], // which files to add to the version commit
+        gitRemote: 'origin',
 
-        gitRemote: 'origin',      // origin to push commit + tag to
+        gitBranch: '',
 
-        gitBranch: '',            // defaults to current working branch
+        gitTagMessage: 'Releasing %FV',
 
-        gitTagMessage: 'Releasing %FV', // Can supply custom tag message.
-                                        // %V will be replaced by the
-                                        // version.
-                                        // %FV will be replaced by the
-                                        // formatted version.
+        gitCommitMessage: '%FV [ci skip]',
 
-        versioner: 'json',        // The versioner to use. You can provide your
-                                  // own function.
+        versioner: 'json',
 
-        incrementer: 'semver',    // Which incrementer to use on the version.
-                                  // You can provide your own function.
+        incrementer: 'semver',
 
-        formatter: null           // Formats the version for the `versionFiles`,
-                                  // tagging, and the commit message. You can
-                                  // provide your own function.
+        formatter: null
       },
 
       versioner: null,
@@ -96,10 +86,10 @@ module.exports = {
       },
 
       /**
-        2. Increments the previous version - assigned on context as `versioning.current`
+        1. Increments the previous version - assigned on context as `versioning.current`
         2. Loops through each `versionFiles` - saving the new version
-        4. Exports previous version as `process.env.EMBER_DEPLOY_PREVIOUS_VERSION`
-        5. Exports current version as `process.env.EMBER_DEPLOY_CURRENT_VERSION`
+        3. Exports previous version as `process.env.EMBER_DEPLOY_PREVIOUS_VERSION`
+        4. Exports current version as `process.env.EMBER_DEPLOY_CURRENT_VERSION`
 
         @method willBuild
         @param {Object} context
@@ -154,6 +144,7 @@ module.exports = {
         const remote = this.readConfig('gitRemote');
         const branch = this.readConfig('gitBranch');
         const tagMessage = this.readConfig('gitTagMessage');
+        const commitMessage = this.readConfig('gitCommitMessage');
 
         const CommitVersionTask = require('./lib/tasks/commit-version');
         const commitVersionTask = new CommitVersionTask({
@@ -165,7 +156,7 @@ module.exports = {
 
         return commitVersionTask
           .stageFiles(files)
-          .then(() => commitVersionTask.commitVersion(current))
+          .then(() => commitVersionTask.commitVersion(current, commitMessage))
           .then(() => commitVersionTask.tagVersion(current, tagMessage))
           .then(tag => setVersioningContext(context, 'tagName', tag));
       },
