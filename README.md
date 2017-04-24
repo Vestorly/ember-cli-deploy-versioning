@@ -3,7 +3,7 @@ This ember-cli-deploy plugin versions each deployment with a commit + annotated 
 The affect of this plugin is that all deploys are tied to a specific version 
 and a .zip file is optionaly included in the `distFiles` to be uploaded (when used with ember-cli-deploy-s3).
 
-#### Configuration Options
+### Configuration Options
 Supply configuration options in config/deploy.js under the `ENV.versioning` hash.
 
 ```js
@@ -103,13 +103,13 @@ versioning: {
 }
 ```
 
-#### Usage
+### Usage
 If you want to skip versioning just supply a `--skip-versioning` flag with your deploy command:
 ```bash
 ember deploy development --skip-versioning
 ```
 
-#### Deployment context
+### Deployment context
 This plugin creates the following object on the deployment context: 
 ```js
 versioning: {
@@ -121,10 +121,10 @@ versioning: {
 }
 ```
 
-#### Required deployment context key/values:
+### Required deployment context key/values:
 ```js
 {
-  distDir // Only required if building a .zip bundle (bundle === true).
-          // Supplied from ember-cli-deploy-build
+  distDir,  // Only required if building a .zip bundle (bundle === true).
+  distFiles // (supplied from ember-cli-deploy-build)
 }
 ```
