@@ -37,6 +37,9 @@ versioning: {
   // The message to annotate the tag with. %FV is replaced with formatted version
   // and %V is replaced with raw version.
 
+  gitCommitMessage: '%FV [ci skip]'
+  // The commit message to use when committing the versioned files.
+
   versioner: 'json' 
   //  The default fn is a json versioner that reads/writes a top level "version" key.
   //
